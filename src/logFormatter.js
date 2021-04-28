@@ -1,12 +1,11 @@
 function splitter(content, pattern){
-    splitted = content.split(pattern)
-
-    return splitted
+    return content.split(pattern)
 }
 
 const originaHeader = splitter(`date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken`, " ")
 const formatTime = time => {
     time = splitter(time, ':')
+
     if(time[0] == '02')
         time[0] = '23'
     else if( time[0] == '01' )
@@ -24,13 +23,14 @@ function logToObject(log){
     originaHeader.forEach((head, i)=>{
         switch(head){
             case 'time':
-                aux[head] = formatTime(log[i])
+                log[i] ? aux[head] = formatTime(log[i]) : ''
                 break;
+
             case 's-ip':
             case 'c-ip':
             case 'cs-uri-stem':
             case 'sc-status':
-            case 'time-taken':
+            case 'time-taken':          
                 aux[head] = log[i]
                 break;
         }
@@ -53,6 +53,16 @@ const groupBy = key => array =>
         return objectsByKeyValue;
     }, {});
 
+const groupByTime = key => array =>
+    array.reduce((objectsByKeyValue, obj) => {
+        let value = obj[key].split(':');
+        value = Number(value[0])
+
+        objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+        return objectsByKeyValue;
+    }, {});
+
+
 function logFormatter(logFile){
     let logsBruto = splitter(logFile, "\n")
     const logs = []
@@ -68,7 +78,6 @@ function logFormatter(logFile){
             default:
                 logs.push(logToObject(log))
                 break;
-
         }
     })
     logs.pop()
@@ -114,13 +123,24 @@ function logFormatter(logFile){
     // Methods / client
     const operationsClient = groupBy('c-ip')(logs)
 
-    // ['172.168.3.46'].map(ops => ops['cs-uri-stem'] == '/v1/finalizarVenda'))
+//times
+    const byTime = groupByTime('time')(logs) 
 
-    //times
+    clients = new Set(clients)
+    // console.log(byTime)
 
-    console.log(logs)
     const header = Object.keys(logs[0])
-    return { logsBruto, logs, methods, methodsTimes, avarageByMethod, clients, header}
-
+    const logData = { 
+        logsBruto, 
+        logs, 
+        byTime, 
+        methods, 
+        methodsTimes, 
+        avarageByMethod, 
+        clients,
+        header 
+    }
+    
+    return logData;
 }
 exports.logFormatter = logFormatter;

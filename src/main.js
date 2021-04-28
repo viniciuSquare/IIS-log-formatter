@@ -6,10 +6,11 @@ const path = "./data/data.txt"
 const conteudo = fs.readFileSync(path, 'utf-8')
 
 //destruct variables returned by the function
-const {logs, methods, methodsTimes, avarageByMethod, clients} = logFormatter(conteudo)
+const {logs, methods, methodsTimes, byTime, avarageByMethod, clients} = logFormatter(conteudo)
 
-// console.log(logs)
-// console.log(avarageByMethod)
+// Exporting data
+    // fs.writeFileSync('./text.txt', JSON.stringify(byTime, null, 2))
+    console.log(methodsTimes)
 
 exports.logs = logs
 exports.methods = avarageByMethod
