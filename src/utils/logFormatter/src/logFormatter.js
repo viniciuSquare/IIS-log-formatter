@@ -26,7 +26,7 @@ function logToObject(log){
                 log[i] ? aux[head] = formatTime(log[i]) : ''
                 break;
 
-            case 's-ip':
+            // case 's-ip':
             case 'c-ip':
             case 'cs-uri-stem':
             case 'sc-status':
@@ -120,16 +120,13 @@ function logFormatter(logFile){
     //Remove repeated clients
     clients = Array.from(new Set(clients))
 
-    // Methods / client
-    const operationsClient = groupBy('c-ip')(logs)
-
+// Methods / client
+    const operationsByClient = groupBy('c-ip')(logs)
 //times
-    const byTime = groupByTime('time')(logs) 
-
-    clients = new Set(clients)
-    // console.log(byTime)
-
+    const byTime = groupByTime('time')(logs)     
+    
     const header = Object.keys(logs[0])
+
     const logData = { 
         logsBruto, 
         logs, 
@@ -138,9 +135,11 @@ function logFormatter(logFile){
         methodsTimes, 
         avarageByMethod, 
         clients,
+        operationsByClient,
         header 
     }
-    
     return logData;
 }
+
 exports.logFormatter = logFormatter;
+
