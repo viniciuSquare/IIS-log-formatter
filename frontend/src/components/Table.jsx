@@ -1,4 +1,6 @@
-export default function LogItem({log}){
+import { AvgListItem } from './StyledTable'
+
+export function LogItem({log}){
   return (
     <tr>
       <td>
@@ -17,5 +19,15 @@ export default function LogItem({log}){
         {log["time-taken"]}ms
       </td>
     </tr>
+  )
+}
+
+export function AvarageItem({ method }) {
+  console.log("teste")
+  return (
+    <AvgListItem>
+      <td>{method[0]}</td>
+      <td>{method[1]} ms</td>
+    </AvgListItem>
   )
 }

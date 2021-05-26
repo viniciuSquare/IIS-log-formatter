@@ -38,7 +38,7 @@ function logToObject(log){
     
     return aux
 }
-
+let server;
 // const header = splitter(`s-ip cs-uri-query c-ip sc-status time-taken`, " ")
 
 // Filter rules and operations  
@@ -67,8 +67,12 @@ function logFormatter(logFile){
     let logsBruto = splitter(logFile, "\n")
     const logs = []
 
-    logsBruto.forEach(log =>{
+    logsBruto.forEach((log, i) =>{
         log = splitter(log, " ")
+        
+        i == 4 ? 
+            server ? null : server = log[2] 
+            : null
 
         //jumping the headers
         switch(log[0][0]){
@@ -80,6 +84,7 @@ function logFormatter(logFile){
                 break;
         }
     })
+    
     logs.pop()
 
 // Filter methods
@@ -127,6 +132,9 @@ function logFormatter(logFile){
     
     const header = Object.keys(logs[0])
 
+//  SORTED BY RECENT - OLDEST
+    logs.reverse();
+
     const logData = { 
         logsBruto, 
         logs, 
@@ -136,7 +144,8 @@ function logFormatter(logFile){
         avarageByMethod, 
         clients,
         operationsByClient,
-        header 
+        header,
+        server
     }
     return logData;
 }
