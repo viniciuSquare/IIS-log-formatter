@@ -23,7 +23,6 @@ export function LogItem({log}){
 }
 
 export function AvarageItem({ method }) {
-  console.log("teste")
   return (
     <AvgListItem>
       <td>{method[0]}</td>
